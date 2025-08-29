@@ -52,6 +52,7 @@ int main(int argc, char *argv[])
     int base_tcp_port = 0;
 
     int audio_system = -1;
+    bool audioio_initialized = false;
 
     input_dev = (char *) malloc(ALSA_MAX_PATH);
     output_dev = (char *) malloc(ALSA_MAX_PATH);
@@ -303,6 +304,8 @@ int main(int argc, char *argv[])
 
 		audioio_init_internal(input_dev, output_dev, audio_system, &radio_capture,
 							  &radio_playback, &radio_capture_prep, &telecom_system);
+		audioio_initialized = true;
+
 
         while (!shutdown_)
         {
@@ -321,6 +324,8 @@ int main(int argc, char *argv[])
 
 		audioio_init_internal(input_dev, output_dev, audio_system, &radio_capture,
 							  &radio_playback, &radio_capture_prep, &telecom_system);
+		audioio_initialized = true;
+
 
         while (!shutdown_)
         {
@@ -337,6 +342,7 @@ int main(int argc, char *argv[])
 
 		audioio_init_internal(input_dev, output_dev, audio_system, &radio_capture,
 							  &radio_playback, &radio_capture_prep, &telecom_system);
+		audioio_initialized = true;
 
         while (!shutdown_)
         {
@@ -380,6 +386,7 @@ int main(int argc, char *argv[])
 
 		audioio_init_internal(input_dev, output_dev, audio_system, &radio_capture,
 							  &radio_playback, &radio_capture_prep, &telecom_system);
+		audioio_initialized = true;
 
         while (!shutdown_)
         {
@@ -396,6 +403,7 @@ int main(int argc, char *argv[])
 
 		audioio_init_internal(input_dev, output_dev, audio_system, &radio_capture,
 							  &radio_playback, &radio_capture_prep, &telecom_system);
+		audioio_initialized = true;
 
         while (!shutdown_)
         {
@@ -416,6 +424,7 @@ int main(int argc, char *argv[])
         buffer = circular_buf_init_shm(SHM_PAYLOAD_BUFFER_SIZE, (char *) SHM_PAYLOAD_NAME);
 
         audioio_init_internal(input_dev, output_dev, audio_system, &radio_capture, &radio_playback, &radio_capture_prep, &telecom_system);
+	audioio_initialized = true;
 
         while (!shutdown_)
         {
@@ -438,6 +447,7 @@ int main(int argc, char *argv[])
 
 		audioio_init_internal(input_dev, output_dev, audio_system, &radio_capture,
 							  &radio_playback, &radio_capture_prep, &telecom_system);
+		audioio_initialized = true;
 
         while (!shutdown_)
         {
@@ -453,7 +463,8 @@ int main(int argc, char *argv[])
     if (output_dev)
         free(output_dev);
 
-    audioio_deinit(&radio_capture, &radio_playback, &radio_capture_prep);
+    if (audioio_initialized)
+      audioio_deinit(&radio_capture, &radio_playback, &radio_capture_prep);
 
 
     return EXIT_SUCCESS;
